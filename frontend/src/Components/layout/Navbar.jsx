@@ -5,7 +5,7 @@ function Navbar() {
 
         {/* Logo */}
         <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent">
-          ChatApp
+          Instagram
         </h1>
 
         {/* Search */}

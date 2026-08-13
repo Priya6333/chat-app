@@ -1,3 +1,5 @@
+import CommentBox from "./CommentBox";
+
 function PostCard({ post }) {
   return (
     <article className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
@@ -36,7 +38,7 @@ function PostCard({ post }) {
         className="w-full aspect-square object-cover"
       />
 
-      {/* Actions */}
+      {/* Actions + Content */}
       <div className="p-4">
 
         <div className="flex items-center justify-between">
@@ -81,6 +83,13 @@ function PostCard({ post }) {
         </button>
 
       </div>
+
+      {/* Comment Box */}
+      <CommentBox
+        onComment={(comment) => {
+          console.log("New comment:", comment);
+        }}
+      />
 
     </article>
   );
