@@ -1,12 +1,45 @@
+import { useNavigate, useLocation } from "react-router-dom";
+
 function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const menuItems = [
-    "Home",
-    "Explore",
-    "Search",
-    "Notifications",
-    "Messages",
-    "Profile",
-    "Settings",
+    {
+      name: "Home",
+      path: "/home",
+      icon: "⌂",
+    },
+    {
+      name: "Explore",
+      path: "/explore",
+      icon: "⌕",
+    },
+    {
+      name: "Search",
+      path: "/search",
+      icon: "🔍",
+    },
+    {
+      name: "Notifications",
+      path: "/notifications",
+      icon: "♡",
+    },
+    {
+      name: "Messages",
+      path: "/chat",
+      icon: "✉",
+    },
+    {
+      name: "Profile",
+      path: "/profile",
+      icon: "◉",
+    },
+    {
+      name: "Settings",
+      path: "/settings",
+      icon: "⚙",
+    },
   ];
 
   return (
@@ -14,14 +47,27 @@ function Sidebar() {
 
       <nav className="space-y-2">
 
-        {menuItems.map((item) => (
-          <button
-            key={item}
-            className="w-full text-left px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 hover:text-purple-600 transition"
-          >
-            {item}
-          </button>
-        ))}
+        {menuItems.map((item) => {
+          const isActive = location.pathname === item.path;
+
+          return (
+            <button
+              key={item.name}
+              onClick={() => navigate(item.path)}
+              className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl text-left transition ${
+                isActive
+                  ? "bg-purple-100 text-purple-600 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-purple-600"
+              }`}
+            >
+              <span className="text-xl w-6">
+                {item.icon}
+              </span>
+
+              <span>{item.name}</span>
+            </button>
+          );
+        })}
 
       </nav>
 
