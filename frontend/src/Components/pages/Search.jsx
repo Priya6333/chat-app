@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Search as SearchIcon, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  Search as SearchIcon,
+  UserPlus,
+  ArrowLeft,
+} from "lucide-react";
+
 import Avatar from "../common/Avatar";
 
 const users = [
@@ -36,6 +42,7 @@ const users = [
 ];
 
 function Search() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
   const filteredUsers = users.filter(
@@ -47,14 +54,28 @@ function Search() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Header */}
+      {/* ================= HEADER ================= */}
       <header className="bg-white border-b border-gray-200">
 
         <div className="max-w-2xl mx-auto px-4 py-5">
 
-          <h1 className="text-2xl font-bold text-gray-800">
-            Search
-          </h1>
+          {/* Title + Back */}
+          <div className="flex items-center gap-3">
+
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Go Back"
+            >
+              <ArrowLeft size={22} />
+            </button>
+
+            <h1 className="text-2xl font-bold text-gray-800">
+              Search
+            </h1>
+
+          </div>
 
           {/* Search Box */}
           <div className="relative mt-4">
@@ -70,6 +91,7 @@ function Search() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search users..."
+              autoComplete="off"
               className="w-full bg-gray-100 rounded-xl py-3 pl-11 pr-4 outline-none border border-transparent focus:bg-white focus:border-purple-300 focus:ring-2 focus:ring-purple-100 transition"
             />
 
@@ -79,7 +101,7 @@ function Search() {
 
       </header>
 
-      {/* Results */}
+      {/* ================= RESULTS ================= */}
       <main className="max-w-2xl mx-auto px-4 py-6">
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
@@ -88,8 +110,8 @@ function Search() {
             {query ? "Search Results" : "Recent Searches"}
           </h2>
 
-          {query === "" ? (
-
+          {/* No Search */}
+          {query === "" && (
             <div className="space-y-4">
 
               {users.slice(0, 3).map((user) => (
@@ -100,9 +122,10 @@ function Search() {
               ))}
 
             </div>
+          )}
 
-          ) : filteredUsers.length > 0 ? (
-
+          {/* Search Results */}
+          {query !== "" && filteredUsers.length > 0 && (
             <div className="space-y-4">
 
               {filteredUsers.map((user) => (
@@ -113,16 +136,19 @@ function Search() {
               ))}
 
             </div>
+          )}
 
-          ) : (
-
+          {/* No Users Found */}
+          {query !== "" && filteredUsers.length === 0 && (
             <div className="text-center py-10">
 
               <div className="w-14 h-14 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
+
                 <SearchIcon
                   size={25}
                   className="text-gray-400"
                 />
+
               </div>
 
               <p className="font-medium text-gray-700">
@@ -134,7 +160,6 @@ function Search() {
               </p>
 
             </div>
-
           )}
 
         </div>
@@ -145,33 +170,50 @@ function Search() {
   );
 }
 
+/* ================= USER ROW ================= */
+
 function UserRow({ user }) {
+  const navigate = useNavigate();
+
+  const handleProfileClick = () => {
+    navigate(`/profile/${user.username}`);
+  };
+
   return (
     <div className="flex items-center justify-between">
 
       {/* User */}
-      <div className="flex items-center gap-3">
+      <button
+        type="button"
+        onClick={handleProfileClick}
+        className="flex items-center gap-3 text-left group"
+      >
 
         <Avatar
-  src={user.avatar}
-  alt={user.username}
-  size="md"
-/>
+          src={user.avatar}
+          alt={user.username}
+          size="md"
+        />
 
         <div>
-          <p className="font-semibold text-gray-800">
+
+          <p className="font-semibold text-gray-800 group-hover:text-purple-600 transition">
             {user.username}
           </p>
 
           <p className="text-sm text-gray-500">
             {user.name}
           </p>
+
         </div>
 
-      </div>
+      </button>
 
       {/* Follow */}
-      <button className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition">
+      <button
+        type="button"
+        className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-semibold rounded-lg hover:bg-purple-700 transition"
+      >
         <UserPlus size={16} />
         Follow
       </button>

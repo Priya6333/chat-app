@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+
 import ExploreCard from "../explore/ExploreCard";
 import UserSuggestion from "../explore/UserSuggestion";
 
@@ -59,50 +62,81 @@ const suggestions = [
 ];
 
 function Explore() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Header */}
+      {/* ================= HEADER ================= */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-5">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Explore
-          </h1>
 
-          <p className="text-sm text-gray-500 mt-1">
-            Discover new posts and people
-          </p>
+        <div className="max-w-6xl mx-auto px-4 py-5">
+
+          <div className="flex items-center gap-3">
+
+            {/* Back Button */}
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="p-2 rounded-full hover:bg-gray-100 transition"
+              title="Go Back"
+            >
+              <ArrowLeft size={22} />
+            </button>
+
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">
+                Explore
+              </h1>
+
+              <p className="text-sm text-gray-500 mt-1">
+                Discover new posts and people
+              </p>
+            </div>
+
+          </div>
+
         </div>
+
       </div>
 
+      {/* ================= MAIN ================= */}
       <main className="max-w-6xl mx-auto px-4 py-6">
 
         {/* Suggested Users */}
         <section className="bg-white rounded-2xl border border-gray-200 p-5 mb-6">
 
           <div className="flex items-center justify-between mb-4">
+
             <h2 className="font-semibold text-gray-800">
               Suggested for you
             </h2>
 
-            <button className="text-sm font-semibold text-purple-600">
+            <button
+              type="button"
+              className="text-sm font-semibold text-purple-600 hover:text-purple-700"
+            >
               See All
             </button>
+
           </div>
 
           <div className="flex gap-5 overflow-x-auto">
+
             {suggestions.map((user) => (
               <UserSuggestion
                 key={user.id}
                 user={user}
               />
             ))}
+
           </div>
 
         </section>
 
         {/* Explore Posts */}
         <section>
+
           <h2 className="font-semibold text-gray-800 mb-4">
             Explore Posts
           </h2>
@@ -117,6 +151,7 @@ function Explore() {
             ))}
 
           </div>
+
         </section>
 
       </main>

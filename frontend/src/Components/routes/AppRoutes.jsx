@@ -13,6 +13,7 @@ import EditProfile from "../pages/EditProfile";
 import FollowersFollowing from "../pages/FollowersFollowing";
 import Chat from "../pages/Chat";
 import ChatWindow from "../chat/ChatWindow";
+import ForgotPassword from "../pages/auth/ForgotPassword";
 
 function AppRoutes() {
   return (
@@ -38,6 +39,7 @@ function AppRoutes() {
 />
 <Route path="/chat" element={<Chat />} />
 <Route path="/chat/:username" element={<ChatWindow />} />
+<Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }

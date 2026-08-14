@@ -2,6 +2,10 @@ import ProfileHeader from "../profile/ProfileHeader";
 import ProfileStats from "../profile/ProfileStats";
 import PostGrid from "../profile/PostGrid";
 
+import Navbar from "../layout/Navbar";
+import Sidebar from "../layout/Sidebar";
+import MobileNav from "../layout/MobileNav";
+
 const user = {
   username: "priyanka",
   name: "Priyanka Jagtap",
@@ -49,43 +53,66 @@ function Profile() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* ================= NAVBAR ================= */}
+      <Navbar />
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-6">
+      <div className="flex">
 
-          <ProfileHeader user={user} />
+        {/* ================= SIDEBAR ================= */}
+        <Sidebar />
 
-          <ProfileStats
-            posts={user.posts}
-            followers={user.followers}
-            following={user.following}
-          />
+        {/* ================= MAIN CONTENT ================= */}
+        <main className="w-full lg:ml-64 px-4 sm:px-6 py-6 pb-24">
 
-          {/* Bio */}
-          <div className="mt-5">
-            <h2 className="font-semibold text-gray-800">
-              {user.name}
-            </h2>
+          <div className="max-w-4xl mx-auto">
 
-            <p className="text-sm text-gray-600 mt-1">
-              {user.bio}
-            </p>
+            {/* ================= PROFILE HEADER ================= */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+
+              <ProfileHeader user={user} />
+
+              {/* ================= STATS ================= */}
+              <ProfileStats
+                posts={user.posts}
+                followers={user.followers}
+                following={user.following}
+              />
+
+              {/* ================= BIO ================= */}
+              <div className="mt-5">
+
+                <h2 className="font-semibold text-gray-800">
+                  {user.name}
+                </h2>
+
+                <p className="text-sm text-gray-600 mt-1">
+                  {user.bio}
+                </p>
+
+              </div>
+
+            </div>
+
+
+            {/* ================= POSTS ================= */}
+            <div className="mt-6 bg-white rounded-2xl border border-gray-200 p-4">
+
+              <h2 className="font-semibold text-gray-800 mb-4">
+                Posts
+              </h2>
+
+              <PostGrid posts={posts} />
+
+            </div>
+
           </div>
 
-        </div>
-
-        {/* Posts */}
-        <div className="mt-6 bg-white rounded-2xl border border-gray-200 p-4">
-
-          <h2 className="font-semibold text-gray-800 mb-4">
-            Posts
-          </h2>
-
-          <PostGrid posts={posts} />
-
-        </div>
+        </main>
 
       </div>
+
+      {/* ================= MOBILE NAV ================= */}
+      <MobileNav />
 
     </div>
   );
