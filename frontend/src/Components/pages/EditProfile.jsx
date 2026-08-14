@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Camera, ArrowLeft } from "lucide-react";
 
+import Input from "../common/Input";
+import Button from "../common/Button";
+import Avatar from "../common/Avatar";
+
 function EditProfile() {
   const navigate = useNavigate();
 
@@ -37,6 +41,8 @@ function EditProfile() {
 
     console.log("Updated Profile:", profile);
 
+    alert("Profile updated successfully!");
+
     navigate("/profile");
   };
 
@@ -71,10 +77,11 @@ function EditProfile() {
 
             <div className="relative">
 
-              <img
+              <Avatar
                 src={profile.avatar}
                 alt="Profile"
-                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
+                size="xl"
+                className="border-4 border-white shadow-md"
               />
 
               <label
@@ -104,42 +111,24 @@ function EditProfile() {
           <form onSubmit={handleSubmit} className="space-y-5">
 
             {/* Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Name
-              </label>
-
-              <input
-                type="text"
-                name="name"
-                value={profile.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-400"
-              />
-            </div>
+            <Input
+              label="Name"
+              name="name"
+              value={profile.name}
+              onChange={handleChange}
+              placeholder="Enter your name"
+              required
+            />
 
             {/* Username */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Username
-              </label>
-
-              <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-purple-300">
-
-                <span className="px-3 text-gray-400">
-                  @
-                </span>
-
-                <input
-                  type="text"
-                  name="username"
-                  value={profile.username}
-                  onChange={handleChange}
-                  className="flex-1 py-3 pr-4 outline-none"
-                />
-
-              </div>
-            </div>
+            <Input
+              label="Username"
+              name="username"
+              value={profile.username}
+              onChange={handleChange}
+              placeholder="Enter username"
+              required
+            />
 
             {/* Bio */}
             <div>
@@ -153,6 +142,7 @@ function EditProfile() {
                 onChange={handleChange}
                 rows="4"
                 maxLength="150"
+                placeholder="Write something about yourself..."
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl resize-none outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-400"
               />
 
@@ -164,20 +154,24 @@ function EditProfile() {
             {/* Buttons */}
             <div className="flex gap-3 pt-3">
 
-              <button
+              {/* Cancel */}
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={() => navigate("/profile")}
-                className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition"
+                className="flex-1"
               >
                 Cancel
-              </button>
+              </Button>
 
-              <button
+              {/* Save */}
+              <Button
                 type="submit"
-                className="flex-1 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition shadow-sm"
+                variant="primary"
+                className="flex-1"
               >
                 Save Changes
-              </button>
+              </Button>
 
             </div>
 

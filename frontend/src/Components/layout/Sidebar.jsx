@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import Avatar from "../common/Avatar";
 
 import {
   Home as HomeIcon,
@@ -66,11 +67,11 @@ function Sidebar() {
         onClick={() => navigate("/profile")}
         className="flex items-center gap-3 px-3 py-4 mb-5 border-b border-gray-200 cursor-pointer rounded-xl hover:bg-gray-50 transition"
       >
-        <img
-          src="https://i.pravatar.cc/150?img=32"
-          alt="Priyanka"
-          className="w-12 h-12 rounded-full object-cover"
-        />
+        <Avatar
+  src="https://i.pravatar.cc/150?img=32"
+  alt="Priyanka"
+  size="md"
+/>
 
         <div className="min-w-0">
           <p className="font-semibold text-gray-800 truncate">

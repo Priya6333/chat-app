@@ -1,6 +1,11 @@
 import { useState } from "react";
+import { ImagePlus, ArrowLeft, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Button from "../common/Button";
 
 function CreatePost() {
+  const navigate = useNavigate();
+
   const [image, setImage] = useState(null);
   const [caption, setCaption] = useState("");
 
@@ -10,6 +15,10 @@ function CreatePost() {
     if (file) {
       setImage(URL.createObjectURL(file));
     }
+  };
+
+  const removeImage = () => {
+    setImage(null);
   };
 
   const handleSubmit = (e) => {
@@ -26,6 +35,7 @@ function CreatePost() {
     });
 
     alert("Post created successfully!");
+    navigate("/home");
   };
 
   return (
@@ -33,38 +43,61 @@ function CreatePost() {
 
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-2xl mx-auto px-4 py-5">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Create New Post
-          </h1>
+        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
 
-          <p className="text-sm text-gray-500 mt-1">
-            Share a photo with your followers
-          </p>
+          <button
+            onClick={() => navigate("/home")}
+            className="p-2 rounded-full hover:bg-gray-100 transition"
+          >
+            <ArrowLeft size={22} />
+          </button>
+
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">
+              Create New Post
+            </h1>
+
+            <p className="text-xs text-gray-500">
+              Share something with your followers
+            </p>
+          </div>
+
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-6">
+      {/* Main */}
+      <main className="max-w-2xl mx-auto px-4 py-8">
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl border border-gray-200 overflow-hidden"
+          className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
         >
 
           {/* Image Preview */}
-          <div className="aspect-square bg-gray-100 flex items-center justify-center">
+          <div className="aspect-square bg-gray-100 flex items-center justify-center relative">
 
             {image ? (
-              <img
-                src={image}
-                alt="Preview"
-                className="w-full h-full object-cover"
-              />
+              <>
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
+
+                {/* Remove Image */}
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80"
+                >
+                  <X size={20} />
+                </button>
+              </>
             ) : (
               <div className="text-center">
 
-                <div className="text-5xl mb-4">
-                  📷
+                <div className="w-16 h-16 mx-auto rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mb-4">
+                  <ImagePlus size={30} />
                 </div>
 
                 <p className="font-semibold text-gray-700">
@@ -87,7 +120,7 @@ function CreatePost() {
               htmlFor="image"
               className="block w-full text-center bg-purple-600 text-white py-3 rounded-xl font-semibold cursor-pointer hover:bg-purple-700 transition"
             >
-              Choose Photo
+              {image ? "Change Photo" : "Choose Photo"}
             </label>
 
             <input
@@ -113,7 +146,7 @@ function CreatePost() {
               placeholder="Write a caption..."
               rows="4"
               maxLength="2200"
-              className="w-full resize-none bg-gray-50 border border-gray-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-purple-200"
+              className="w-full resize-none bg-gray-50 border border-gray-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-purple-200 focus:border-purple-400"
             />
 
             <p className="text-xs text-gray-400 text-right mt-1">
@@ -122,15 +155,12 @@ function CreatePost() {
 
           </div>
 
-          {/* Post Button */}
+          {/* Share */}
           <div className="px-5 pb-5">
 
-            <button
-              type="submit"
-              className="w-full bg-purple-600 text-white py-3 rounded-xl font-semibold hover:bg-purple-700 transition"
-            >
-              Share Post
-            </button>
+            <Button type="submit">
+  Share Post
+</Button>
 
           </div>
 

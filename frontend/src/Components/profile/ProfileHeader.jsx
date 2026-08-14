@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Avatar from "../common/Avatar";
 
 function ProfileHeader({ user }) {
   const navigate = useNavigate();
@@ -7,11 +8,11 @@ function ProfileHeader({ user }) {
     <div className="flex items-center gap-6">
 
       {/* Profile Image */}
-      <img
-        src={user.avatar}
-        alt={user.username}
-        className="w-28 h-28 rounded-full object-cover"
-      />
+      <Avatar
+  src={user.avatar}
+  alt={user.username}
+  size="xl"
+/>
 
       <div className="flex-1">
 

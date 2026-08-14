@@ -10,6 +10,9 @@ import Search from "../pages/Search";
 import CreatePost from "../pages/CreatePost";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import FollowersFollowing from "../pages/FollowersFollowing";
+import Chat from "../pages/Chat";
+import ChatWindow from "../chat/ChatWindow";
 
 function AppRoutes() {
   return (
@@ -24,6 +27,17 @@ function AppRoutes() {
       <Route path="/create-post" element={<CreatePost />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/edit-profile" element={<EditProfile />} />
+      <Route
+  path="/profile/:id/followers"
+  element={<FollowersFollowing />}
+/>
+
+<Route
+  path="/profile/:id/following"
+  element={<FollowersFollowing />}
+/>
+<Route path="/chat" element={<Chat />} />
+<Route path="/chat/:username" element={<ChatWindow />} />
     </Routes>
   );
 }

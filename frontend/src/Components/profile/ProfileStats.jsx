@@ -1,21 +1,29 @@
+import { useNavigate } from "react-router-dom";
+
 function ProfileStats({ posts, followers, following }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex gap-8 mt-6">
+    <div className="flex justify-around text-center mt-6">
 
       <div>
-        <p className="font-bold text-gray-800">{posts}</p>
+        <p className="font-bold">{posts}</p>
         <p className="text-sm text-gray-500">Posts</p>
       </div>
 
-      <div>
-        <p className="font-bold text-gray-800">{followers}</p>
+      <button
+        onClick={() => navigate("/profile/priyanka/followers")}
+      >
+        <p className="font-bold">{followers}</p>
         <p className="text-sm text-gray-500">Followers</p>
-      </div>
+      </button>
 
-      <div>
-        <p className="font-bold text-gray-800">{following}</p>
+      <button
+        onClick={() => navigate("/profile/priyanka/following")}
+      >
+        <p className="font-bold">{following}</p>
         <p className="text-sm text-gray-500">Following</p>
-      </div>
+      </button>
 
     </div>
   );
