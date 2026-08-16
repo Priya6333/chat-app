@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Register() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-pink-100 flex items-center justify-center px-4 py-8">
 
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
 
@@ -202,7 +202,7 @@ function Register() {
               {/* Register Button */}
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 transition shadow-lg shadow-purple-200"
+                className="w-full py-3.5 rounded-xl text-white font-semibold bg-gradient-to-r from-blue-400 to-gray-200 hover:from-purple-700 hover:to-pink-600 transition shadow-lg shadow-purple-200"
               >
                 Create Account
               </button>

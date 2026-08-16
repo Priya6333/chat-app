@@ -3,6 +3,8 @@ import { ArrowLeft } from "lucide-react";
 
 import ExploreCard from "../explore/ExploreCard";
 import UserSuggestion from "../explore/UserSuggestion";
+import Sidebar from "../layout/Sidebar";
+
 
 const posts = [
   {
@@ -102,7 +104,10 @@ function Explore() {
 
       {/* ================= MAIN ================= */}
       <main className="max-w-6xl mx-auto px-4 py-6">
-
+        
+        
+        {/* Sidebar */}
+        <Sidebar />
         {/* Suggested Users */}
         <section className="bg-white rounded-2xl border border-gray-200 p-5 mb-6">
 

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import ChatList from "../chat/ChatList";
+import Sidebar from "../layout/Sidebar";
 
 function Chat() {
   const navigate = useNavigate();
@@ -27,7 +28,9 @@ function Chat() {
           </h1>
 
         </div>
-
+        
+        {/* ================= SIDEBAR ================= */}
+        <Sidebar />
         {/* Chat List */}
         <ChatList />
 

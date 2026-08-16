@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import NotificationItem from "../notifications/NotificationItem";
+import Sidebar from "../layout/Sidebar";
 
 const notifications = [
   {
@@ -82,6 +83,10 @@ function Notifications() {
 
       {/* ================= NOTIFICATIONS ================= */}
       <main className="max-w-2xl mx-auto mt-4 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+
+        
+        {/* ================= SIDEBAR ================= */}
+        <Sidebar />
 
         {notifications.length > 0 ? (
 

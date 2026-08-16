@@ -5,8 +5,9 @@ import {
   UserPlus,
   ArrowLeft,
 } from "lucide-react";
-
 import Avatar from "../common/Avatar";
+import Sidebar from "../layout/Sidebar";
+
 
 const users = [
   {
@@ -103,8 +104,13 @@ function Search() {
 
       {/* ================= RESULTS ================= */}
       <main className="max-w-2xl mx-auto px-4 py-6">
-
+        
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
+
+            {/* Sidebar */}
+        <Sidebar />
+
+
 
           <h2 className="font-semibold text-gray-800 mb-5">
             {query ? "Search Results" : "Recent Searches"}

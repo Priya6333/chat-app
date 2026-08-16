@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import Sidebar from "../layout/Sidebar";
+
 
 function Settings() {
   const navigate = useNavigate();
@@ -58,7 +60,9 @@ function Settings() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-6">
-
+            {/* Sidebar */}
+                <Sidebar />
+        
         {/* Account */}
         <section
           className={`rounded-2xl border overflow-hidden ${

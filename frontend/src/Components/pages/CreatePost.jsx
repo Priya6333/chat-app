@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ImagePlus, ArrowLeft, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "../common/Button";
+import Sidebar from "../layout/Sidebar";
 
 function CreatePost() {
   const navigate = useNavigate();
@@ -67,7 +68,8 @@ function CreatePost() {
 
       {/* Main */}
       <main className="max-w-2xl mx-auto px-4 py-8">
-
+          {/* ================= SIDEBAR ================= */}
+        <Sidebar />
         <form
           onSubmit={handleSubmit}
           className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
