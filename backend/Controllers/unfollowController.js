@@ -1,3 +1,5 @@
+import Follow from "../models/Follow.js";
+
 export const unfollowUser = async (req, res) => {
   try {
     const followerId = req.user.id;
