@@ -1,7 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { AuthenticateWithRedirectCallback } from "@clerk/react";
 
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import VerifyOTP from "../pages/auth/VerifyOTP";
+import ForgotPassword from "../pages/auth/forgotpassword";
 import Home from "../pages/Home";
 import Notifications from "../pages/Notifications";
 import Settings from "../pages/Settings";
@@ -13,13 +16,26 @@ import EditProfile from "../pages/EditProfile";
 import FollowersFollowing from "../pages/FollowersFollowing";
 import Chat from "../pages/Chat";
 import ChatWindow from "../chat/ChatWindow";
-import ForgotPassword from "../pages/auth/ForgotPassword";
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/verify-otp" element={<VerifyOTP />} />
+      <Route
+        path="/sso-callback"
+        element={
+          <AuthenticateWithRedirectCallback
+            signInForceRedirectUrl="/home"
+            signUpForceRedirectUrl="/home"
+            redirectUrlComplete="/home"
+          />
+        }
+      />
+
       <Route path="/home" element={<Home />} />
       <Route path="/notifications" element={<Notifications />} />
       <Route path="/settings" element={<Settings />} />
@@ -28,18 +44,12 @@ function AppRoutes() {
       <Route path="/create-post" element={<CreatePost />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/edit-profile" element={<EditProfile />} />
-      <Route
-  path="/profile/:id/followers"
-  element={<FollowersFollowing />}
-/>
+      <Route path="/profile/:id/followers" element={<FollowersFollowing />} />
+      <Route path="/profile/:id/following" element={<FollowersFollowing />} />
+      <Route path="/chat" element={<Chat />} />
+      <Route path="/chat/:username" element={<ChatWindow />} />
 
-<Route
-  path="/profile/:id/following"
-  element={<FollowersFollowing />}
-/>
-<Route path="/chat" element={<Chat />} />
-<Route path="/chat/:username" element={<ChatWindow />} />
-<Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

@@ -1,122 +1,176 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSignIn } from "@clerk/react";
+import AuthLayout from "./AuthLayout";
 
-function ForgotPassword() {
+export default function ForgotPassword() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [code, setCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const { signIn, isLoaded, setActive } = useSignIn();
+
+  const handleSendResetCode = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!email.trim()) {
-      alert("Please enter your email");
+      setError("Please enter your email");
       return;
     }
 
-    console.log("Reset password email:", email);
+    if (!isLoaded) return;
 
-    // OTP page
-    navigate("/verify-otp");
+    try {
+      setLoading(true);
+      await signIn.create({
+        strategy: "reset_password_email_code",
+        identifier: email,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      setError(
+        err.errors?.[0]?.longMessage ||
+        err.errors?.[0]?.message ||
+        "Failed to send reset code"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!isLoaded) return;
+
+    try {
+      setLoading(true);
+      const result = await signIn.attemptFirstFactor({
+        strategy: "reset_password_email_code",
+        code: code,
+        password: newPassword,
+      });
+
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        navigate("/home");
+      } else {
+        setError("Password reset incomplete");
+      }
+    } catch (err) {
+      setError(
+        err.errors?.[0]?.longMessage ||
+        err.errors?.[0]?.message ||
+        "Password reset failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 flex items-center justify-center px-4">
+    <AuthLayout
+      headline="Reset Password 🔑"
+      description="Don't worry! Enter your registered email address to receive password reset instructions."
+    >
+      <div className="w-full max-w-sm mx-auto">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+            Forgot Password?
+          </h1>
+          <p className="text-gray-500 text-xs sm:text-sm mt-1">
+            {!submitted
+              ? "Enter your email to receive a verification code."
+              : "Enter the verification code and your new password."}
+          </p>
+        </div>
 
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 sm:p-10">
+        {error && (
+          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs text-center font-medium">
+            {error}
+          </div>
+        )}
 
-        {/* ================= LOGO ================= */}
-        <div className="flex flex-col items-center mb-8">
-
-          {/* Instagram Logo */}
-          <div className="w-20 h-20 rounded-[22px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
-
-            <div className="w-12 h-12 rounded-[15px] border-[4px] border-white relative">
-
-              {/* Camera Lens */}
-              <div className="absolute w-5 h-5 rounded-full border-[3px] border-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              </div>
-
-              {/* Camera Dot */}
-              <div className="absolute w-2.5 h-2.5 rounded-full bg-white top-1 right-1">
-              </div>
-
+        {!submitted ? (
+          <form onSubmit={handleSendResetCode} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                className="w-full px-4 py-3 text-sm text-gray-900 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all placeholder:text-gray-400"
+              />
             </div>
 
-          </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-[#9333ea] via-[#ec4899] to-[#f43f5e] hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-purple-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              {loading ? "Sending..." : "Send Verification Code"}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                Reset Code
+              </label>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter 6-digit code"
+                required
+                className="w-full px-4 py-3 text-sm text-gray-900 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+              />
+            </div>
 
-          <h1 className="mt-3 text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-            Instagram
-          </h1>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                New Password
+              </label>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                required
+                className="w-full px-4 py-3 text-sm text-gray-900 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+              />
+            </div>
 
-        </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-[#9333ea] via-[#ec4899] to-[#f43f5e] hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-purple-500/25 transition-all cursor-pointer"
+            >
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
+          </form>
+        )}
 
-
-        {/* ================= HEADING ================= */}
-        <div className="text-center mb-8">
-
-          <h2 className="text-2xl font-bold text-gray-800">
-            Forgot Password?
-          </h2>
-
-          <p className="text-gray-500 text-sm mt-2 leading-relaxed">
-            Enter your email address and we'll send you
-            a verification code to reset your password.
-          </p>
-
-        </div>
-
-
-        {/* ================= FORM ================= */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-
-          {/* Email */}
-          <div>
-
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email
-            </label>
-
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full px-4 py-3.5 border border-gray-200 rounded-xl bg-gray-50 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition"
-            />
-
-          </div>
-
-
-          {/* Send OTP */}
-          <button
-            type="submit"
-            className="w-full py-3.5 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 transition shadow-lg shadow-purple-200"
-          >
-            Send OTP
-          </button>
-
-        </form>
-
-
-        {/* ================= BACK TO LOGIN ================= */}
-        <p className="text-center text-sm text-gray-500 mt-7">
-
-          Remember your password?{" "}
-
+        <p className="text-center text-xs text-gray-500 mt-6 font-medium">
+          Remembered your password?{" "}
           <Link
-            to="/"
-            className="text-purple-600 font-semibold hover:underline"
+            to="/login"
+            className="text-purple-600 font-bold hover:underline"
           >
             Login
           </Link>
-
         </p>
-
       </div>
-
-    </div>
+    </AuthLayout>
   );
 }
-
-export default ForgotPassword;

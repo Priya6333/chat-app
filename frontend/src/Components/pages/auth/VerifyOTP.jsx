@@ -1,141 +1,118 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSignUp, useSignIn } from "@clerk/react";
+import AuthLayout from "./AuthLayout";
 
-function VerifyOTP() {
+export default function VerifyOTP() {
   const navigate = useNavigate();
-
   const [otp, setOtp] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { signUp, isLoaded: signUpLoaded, setActive: setSignUpActive } = useSignUp();
+  const { signIn, isLoaded: signInLoaded, setActive: setSignInActive } = useSignIn();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (otp.length !== 6) {
-      alert("Please enter a valid 6-digit OTP");
+      setError("Please enter a valid 6-digit verification code");
       return;
     }
 
-    console.log("OTP:", otp);
+    try {
+      setLoading(true);
 
-    // OTP verified → Home
-    navigate("/home");
+      if (signUpLoaded && signUp?.status === "missing_requirements") {
+        const res = await signUp.attemptEmailAddressVerification({ code: otp });
+        if (res.status === "complete") {
+          await setSignUpActive({ session: res.createdSessionId });
+          navigate("/home");
+          return;
+        }
+      }
+
+      if (signInLoaded && signIn?.status === "needs_first_factor") {
+        const res = await signIn.attemptFirstFactor({
+          strategy: "email_code",
+          code: otp,
+        });
+        if (res.status === "complete") {
+          await setSignInActive({ session: res.createdSessionId });
+          navigate("/home");
+          return;
+        }
+      }
+
+      navigate("/home");
+    } catch (err) {
+      setError(err.errors?.[0]?.message || "Invalid verification code");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 flex items-center justify-center px-4">
-
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 sm:p-10">
-
-        {/* ================= LOGO ================= */}
-        <div className="flex flex-col items-center mb-8">
-
-          {/* Instagram Logo */}
-          <div className="w-20 h-20 rounded-[22px] bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center shadow-lg">
-
-            <div className="w-12 h-12 rounded-[15px] border-[4px] border-white relative">
-
-              {/* Camera Lens */}
-              <div className="absolute w-5 h-5 rounded-full border-[3px] border-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-              </div>
-
-              {/* Camera Dot */}
-              <div className="absolute w-2.5 h-2.5 rounded-full bg-white top-1 right-1">
-              </div>
-
+    <AuthLayout
+      headline="Verify Account 🔒"
+      description="Enter the verification code sent to your email to complete your authentication."
+    >
+      <div className="w-full max-w-sm mx-auto">
+        <div className="text-center mb-6">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center shadow-lg shadow-pink-500/20 mb-3">
+            <div className="w-8 h-8 rounded-lg border-[2px] border-white relative flex items-center justify-center">
+              <div className="w-3 h-3 rounded-full border-[1.5px] border-white" />
             </div>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+            Verify Your Account
+          </h1>
+          <p className="text-gray-500 text-xs sm:text-sm mt-1">
+            Enter the 6-digit code sent to your email address.
+          </p>
+        </div>
 
+        {error && (
+          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs text-center font-medium">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 text-center">
+              Verification Code
+            </label>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              value={otp}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+              placeholder="123456"
+              className="w-full px-4 py-3.5 text-center text-2xl tracking-[0.5em] font-bold text-gray-900 bg-gray-50/80 border border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
+            />
           </div>
 
-          <h1 className="mt-3 text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-            Instagram
-          </h1>
-
-        </div>
-
-
-        {/* ================= HEADING ================= */}
-        <div className="text-center mb-8">
-
-          <h2 className="text-2xl font-bold text-gray-800">
-            Verify Your Account
-          </h2>
-
-          <p className="text-gray-500 text-sm mt-2 leading-relaxed">
-            We have sent a 6-digit verification code
-            to your email address.
-          </p>
-
-        </div>
-
-
-        {/* ================= OTP FORM ================= */}
-        <form onSubmit={handleSubmit}>
-
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Enter OTP
-          </label>
-
-          <input
-            type="text"
-            inputMode="numeric"
-            maxLength={6}
-            value={otp}
-            onChange={(e) => {
-              const value = e.target.value
-                .replace(/\D/g, "")
-                .slice(0, 6);
-
-              setOtp(value);
-            }}
-            placeholder="Enter 6-digit OTP"
-            className="w-full px-4 py-4 text-center text-xl tracking-[0.5em] font-semibold border border-gray-200 rounded-xl bg-gray-50 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 transition"
-          />
-
-
-          {/* Verify Button */}
           <button
             type="submit"
-            className="w-full mt-5 py-3.5 rounded-xl text-white font-semibold bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 transition shadow-lg shadow-purple-200"
+            disabled={loading}
+            className="w-full py-3.5 px-4 bg-gradient-to-r from-[#9333ea] via-[#ec4899] to-[#f43f5e] hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-purple-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
           >
-            Verify OTP
+            {loading ? "Verifying..." : "Verify OTP"}
           </button>
-
         </form>
 
-
-        {/* ================= RESEND ================= */}
-        <div className="text-center mt-6">
-
-          <p className="text-sm text-gray-500">
-            Didn't receive the code?
-          </p>
-
-          <button
-            type="button"
-            onClick={() => alert("OTP resent successfully!")}
-            className="mt-2 text-sm font-semibold text-purple-600 hover:text-purple-700"
-          >
-            Resend OTP
-          </button>
-
-        </div>
-
-
-        {/* ================= BACK TO LOGIN ================= */}
-        <p className="text-center text-sm text-gray-500 mt-7">
-
+        <p className="text-center text-xs text-gray-500 mt-6 font-medium">
           <Link
-            to="/"
-            className="text-purple-600 font-semibold hover:underline"
+            to="/login"
+            className="text-purple-600 font-bold hover:underline"
           >
             ← Back to Login
           </Link>
-
         </p>
-
       </div>
-
-    </div>
+    </AuthLayout>
   );
 }
-
-export default VerifyOTP;
